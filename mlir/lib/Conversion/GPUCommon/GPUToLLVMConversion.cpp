@@ -1006,7 +1006,7 @@ LogicalResult LegalizeLaunchFuncOpPattern::matchAndRewrite(
                       "shape and an integer or float element type.");
       }
 
-      unsigned bitwidth = memrefTy.getElementTypeBitWidth();
+      unsigned bitwidth = memrefTy.getElementType().getIntOrFloatBitWidth();
       if (bitwidth % 8 != 0) {
         return rewriter.notifyMatchFailure(
             launchOp, "Operand to launch op is not a memref with a "

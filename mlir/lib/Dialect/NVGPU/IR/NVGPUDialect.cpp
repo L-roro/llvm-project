@@ -90,12 +90,12 @@ LogicalResult DeviceAsyncCopyOp::verify() {
                          << " destination indices, got "
                          << getDstIndices().size();
   int64_t dstElements = getDstElements().getZExtValue();
-  int64_t sizeInBytes = (dstMemref.getElementTypeBitWidth() * dstElements) / 8;
+  int64_t sizeInBytes = (dstMemref.getElementType().getIntOrFloatBitWidth() * dstElements) / 8;
   if (sizeInBytes != 4 && sizeInBytes != 8 && sizeInBytes != 16) {
-    unsigned dstWidth = dstMemref.getElementTypeBitWidth();
+    unsigned dstWidth = dstMemref.getElementType().getIntOrFloatBitWidth();
     InFlightDiagnostic diag = emitError();
     diag << "Requested copy elements is " << dstElements << " with width "
-         << dstMemref.getElementTypeBitWidth()
+         << dstMemref.getElementType().getIntOrFloatBitWidth()
          << ". But copy elements could be one of ";
     if ((32 / dstWidth) > 0)
       diag << (32 / dstWidth) << ", ";
@@ -106,7 +106,7 @@ LogicalResult DeviceAsyncCopyOp::verify() {
     return diag;
   }
   if (getBypassL1().has_value()) {
-    int64_t req = 16 * 8 / dstMemref.getElementTypeBitWidth();
+    int64_t req = 16 * 8 / dstMemref.getElementType().getIntOrFloatBitWidth();
     if (getBypassL1().value() && sizeInBytes != 16) {
       return emitOpError() << "bypassL1 does not satify alignment for "
                            << dstMemref << " with destination element "
@@ -377,7 +377,7 @@ std::optional<InFlightDiagnostic> verifyTmaDescriptorWithMemref(
   if (descMemref.getRank() > 1 &&
       descType.getSwizzle() != TensorMapSwizzleKind::SWIZZLE_NONE) {
     unsigned lastDimensionByte =
-        descMemref.getElementTypeBitWidth() * descMemref.getShape().back() / 8;
+        descMemref.getElementType().getIntOrFloatBitWidth() * descMemref.getShape().back() / 8;
     if (lastDimensionByte != kMaxTMALastdimByte)
       return op->emitError() << "the tensormap descriptor must have last "
                                 "dimension of "

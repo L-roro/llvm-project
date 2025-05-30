@@ -995,7 +995,7 @@ OpFoldResult HopperBuilder::buildTmaAsyncLoad(
   bindSymbolsList(ctx, llvm::MutableArrayRef{symbols});
   AffineExpr prodExprInBytes =
       computeProduct(ctx, symbols) *
-      (sharedMemref.getType().getElementTypeBitWidth() / 8);
+      (sharedMemref.getType().getElementType().getIntOrFloatBitWidth() / 8);
   auto res = affine::makeComposedFoldedAffineApply(rewriter, loc,
                                                    prodExprInBytes, mixedSizes);
   return res;

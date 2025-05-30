@@ -658,7 +658,7 @@ LLVM::GlobalOp getDynamicSharedMemorySymbol(
     ConversionPatternRewriter &rewriter, gpu::GPUModuleOp moduleOp,
     gpu::DynamicSharedMemoryOp op, const LLVMTypeConverter *typeConverter,
     MemRefType memrefType, unsigned alignmentBit) {
-  uint64_t alignmentByte = alignmentBit / memrefType.getElementTypeBitWidth();
+  uint64_t alignmentByte = alignmentBit / memrefType.getElementType().getIntOrFloatBitWidth();
 
   FailureOr<unsigned> addressSpace =
       typeConverter->getMemRefAddressSpace(memrefType);

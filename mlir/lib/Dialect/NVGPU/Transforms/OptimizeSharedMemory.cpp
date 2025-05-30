@@ -55,7 +55,7 @@ static Value permuteVectorOffset(OpBuilder &b, Location loc,
   // ceil(sharedMemoryLineSizeBytes / dimSizeBytes(tgtDim)).
   const int64_t permuteEveryN = std::max<int64_t>(
       1, kSharedMemoryLineSizeBytes / ((memrefTy.getDimSize(tgtDim) *
-                                        memrefTy.getElementTypeBitWidth()) /
+                                        memrefTy.getElementType().getIntOrFloatBitWidth()) /
                                        8));
 
   // clang-format off
@@ -68,7 +68,7 @@ static Value permuteVectorOffset(OpBuilder &b, Location loc,
   // bits[N:M] = vector index
   // clang-format on
   int64_t n =
-      llvm::Log2_64(kDefaultVectorSizeBits / memrefTy.getElementTypeBitWidth());
+      llvm::Log2_64(kDefaultVectorSizeBits / memrefTy.getElementType().getIntOrFloatBitWidth());
   int64_t m = llvm::Log2_64(memrefTy.getDimSize(tgtDim));
 
   // Capture bits[0:(M-N)] of src by first creating a (M-N) mask.
@@ -167,7 +167,7 @@ mlir::nvgpu::optimizeSharedMemoryReadsAndWrites(Operation *parentOp,
   // If dim[rank-1] is small enough to fit 8 rows in a 128B line.
   const int64_t rowSize = memRefType.getDimSize(memRefType.getRank() - 1);
   const int64_t rowsPerLine =
-      (8 * kSharedMemoryLineSizeBytes / memRefType.getElementTypeBitWidth()) /
+      (8 * kSharedMemoryLineSizeBytes / memRefType.getElementType().getIntOrFloatBitWidth()) /
       rowSize;
   const int64_t threadGroupSize =
       1LL << (7 - llvm::Log2_64(kDefaultVectorSizeBits / 8));

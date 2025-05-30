@@ -579,9 +579,9 @@ static Type convertMemrefType(const spirv::TargetEnv &targetEnv,
   spirv::StorageClass storageClass = attr.getValue();
 
   if (isa<IntegerType>(type.getElementType())) {
-    if (type.getElementTypeBitWidth() == 1)
+    if (type.getElementType().getIntOrFloatBitWidth() == 1)
       return convertBoolMemrefType(targetEnv, options, type, storageClass);
-    if (type.getElementTypeBitWidth() < 8)
+    if (type.getElementType().getIntOrFloatBitWidth() < 8)
       return convertSubByteMemrefType(targetEnv, options, type, storageClass);
   }
 

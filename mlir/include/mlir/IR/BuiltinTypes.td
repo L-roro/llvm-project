@@ -815,7 +815,6 @@ def Builtin_MemRef : Builtin_Type<"MemRef", "memref", [
   ];
   let extraClassDeclaration = [{
     using BaseMemRefType::clone;
-    using ShapedType::Trait<MemRefType>::getElementTypeBitWidth;
     using ShapedType::Trait<MemRefType>::getRank;
     using ShapedType::Trait<MemRefType>::getNumElements;
     using ShapedType::Trait<MemRefType>::isDynamicDim;
@@ -823,6 +822,10 @@ def Builtin_MemRef : Builtin_Type<"MemRef", "memref", [
     using ShapedType::Trait<MemRefType>::getNumDynamicDims;
     using ShapedType::Trait<MemRefType>::getDimSize;
     using ShapedType::Trait<MemRefType>::getDynamicDimIndex;
+
+    // This inherited method is ambiguous and limits the extensibility 
+    // of the MemRefElementTypeInterface
+    unsigned getElementTypeBitWidth() const = delete;
 
     /// This is a builder type that keeps local references to arguments.
     /// Arguments that are passed into the builder must outlive the builder.
@@ -1191,7 +1194,6 @@ def Builtin_UnrankedMemRef : Builtin_Type<"UnrankedMemRef", "unranked_memref", [
   ];
   let extraClassDeclaration = [{
     using BaseMemRefType::clone;
-    using ShapedType::Trait<UnrankedMemRefType>::getElementTypeBitWidth;
     using ShapedType::Trait<UnrankedMemRefType>::getRank;
     using ShapedType::Trait<UnrankedMemRefType>::getNumElements;
     using ShapedType::Trait<UnrankedMemRefType>::isDynamicDim;
@@ -1199,6 +1201,10 @@ def Builtin_UnrankedMemRef : Builtin_Type<"UnrankedMemRef", "unranked_memref", [
     using ShapedType::Trait<UnrankedMemRefType>::getNumDynamicDims;
     using ShapedType::Trait<UnrankedMemRefType>::getDimSize;
     using ShapedType::Trait<UnrankedMemRefType>::getDynamicDimIndex;
+
+    // This inherited method is ambiguous and limits the extensibility 
+    // of the MemRefElementTypeInterface
+    unsigned getElementTypeBitWidth() const = delete;
 
     ArrayRef<int64_t> getShape() const { return std::nullopt; }
 

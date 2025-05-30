@@ -685,7 +685,7 @@ struct NVGPUAsyncCopyLowering
     scrPtr = b.create<LLVM::AddrSpaceCastOp>(srcPointerGlobalType, scrPtr);
     int64_t dstElements = adaptor.getDstElements().getZExtValue();
     int64_t sizeInBytes =
-        (dstMemrefType.getElementTypeBitWidth() * dstElements) / 8;
+        (dstMemrefType.getElementType().getIntOrFloatBitWidth() * dstElements) / 8;
     // When the optional SrcElements argument is *not* present, the regular
     // CpAsyncOp is generated. CopyAsyncOp reads bytes from source (global
     // memory) to fill DstElements number of elements in the destination
@@ -700,7 +700,7 @@ struct NVGPUAsyncCopyLowering
           b.create<LLVM::ConstantOp>(b.getI32Type(), b.getI32IntegerAttr(3));
       Value bitwidth = b.create<LLVM::ConstantOp>(
           b.getI32Type(),
-          b.getI32IntegerAttr(srcMemrefType.getElementTypeBitWidth()));
+          b.getI32IntegerAttr(srcMemrefType.getElementType().getIntOrFloatBitWidth()));
       Value srcElementsI32 = b.create<LLVM::TruncOp>(b.getI32Type(), srcBytes);
       srcBytes = b.create<LLVM::LShrOp>(
           b.create<LLVM::MulOp>(bitwidth, srcElementsI32), c3I32);

@@ -74,7 +74,7 @@ static LogicalResult transferPreconditions(
   if (!memRefType.isLastDimUnitStride())
     return rewriter.notifyMatchFailure(xferOp, "!= 1 stride needs VectorToSCF");
 
-  if (memRefType.getElementTypeBitWidth() < 8)
+  if (memRefType.getElementType().getIntOrFloatBitWidth() < 8)
     return rewriter.notifyMatchFailure(xferOp, "unsupported sub-byte type");
 
   // If there is broadcasting involved then we first load the unbroadcasted

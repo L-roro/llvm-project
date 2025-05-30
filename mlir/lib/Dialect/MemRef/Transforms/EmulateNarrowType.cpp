@@ -406,8 +406,8 @@ struct ConvertMemrefStore final : OpConversionPattern<memref::StoreOp> {
   matchAndRewrite(memref::StoreOp op, OpAdaptor adaptor,
                   ConversionPatternRewriter &rewriter) const override {
     auto convertedType = cast<MemRefType>(adaptor.getMemref().getType());
-    int srcBits = op.getMemRefType().getElementTypeBitWidth();
-    int dstBits = convertedType.getElementTypeBitWidth();
+    int srcBits = op.getMemRefType().getElementType().getIntOrFloatBitWidth();
+    int dstBits = convertedType.getElementType().getIntOrFloatBitWidth();
     auto dstIntegerType = rewriter.getIntegerType(dstBits);
     if (dstBits % srcBits != 0) {
       return rewriter.notifyMatchFailure(

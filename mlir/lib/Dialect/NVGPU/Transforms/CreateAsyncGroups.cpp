@@ -250,7 +250,7 @@ void nvgpu::createAsyncGroups(RewriterBase &rewriter, Operation *op,
           buildNumReadElements(rewriter, writeOp->getLoc(), readOp);
       auto dstMemref = cast<MemRefType>(storeBase.getType());
       int64_t sizeInBytes =
-          (dstMemref.getElementTypeBitWidth() * numElements) / 8;
+          (dstMemref.getElementType().getIntOrFloatBitWidth() * numElements) / 8;
       // bypass_l1 only possible with 16 byte transfer.
       Value token = rewriter.create<nvgpu::DeviceAsyncCopyOp>(
           writeOp->getLoc(), nvgpu::DeviceAsyncTokenType::get(op->getContext()),
