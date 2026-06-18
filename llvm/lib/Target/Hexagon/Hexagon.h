@@ -71,6 +71,7 @@ void initializeHexagonSplitConst32AndConst64Pass(PassRegistry &);
 void initializeHexagonVectorPrintPass(PassRegistry &);
 
 void initializeHexagonQFPOptimizerPass(PassRegistry &);
+void initializeHexagonQFPSpillFixupPass(PassRegistry &);
 
 Pass *createHexagonLoopIdiomPass();
 Pass *createHexagonVectorLoopCarriedReuseLegacyPass();
@@ -119,6 +120,7 @@ FunctionPass *createHexagonVectorPrint();
 FunctionPass *createHexagonVExtract();
 FunctionPass *createHexagonExpandCondsets();
 FunctionPass *createHexagonQFPOptimizer();
+FunctionPass *createHexagonQFPSpillFixup();
 
 } // end namespace llvm;
 

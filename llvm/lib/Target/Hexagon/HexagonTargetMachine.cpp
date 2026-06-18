@@ -230,6 +230,7 @@ LLVMInitializeHexagonTarget() {
   initializeHexagonSplitConst32AndConst64Pass(PR);
   initializeHexagonVectorPrintPass(PR);
   initializeHexagonQFPOptimizerPass(PR);
+  initializeHexagonQFPSpillFixupPass(PR);
 }
 
 HexagonTargetMachine::HexagonTargetMachine(const Target &T, const Triple &TT,
@@ -466,6 +467,7 @@ void HexagonPassConfig::addPreRegAlloc() {
 }
 
 void HexagonPassConfig::addPostRegAlloc() {
+  addPass(createHexagonQFPSpillFixup());
   if (getOptLevel() != CodeGenOptLevel::None) {
     if (EnableRDFOpt)
       addPass(createHexagonRDFOpt());
